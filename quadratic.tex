@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+%Gummi|065|=)
+\title{Analytical Solution for Electromagnetic Ray Trajectories in a Quadratic Plasma Profile}
+\date{}
+\begin{document}
+
+\maketitle
+
+\section*{Plasma Profile Definition}
+The following profile will be described in cylindrical coordinates with variation only along the $r$ axis. The plasma profile is designed to have a background electron density of $n_o$. The minima of the quadratic electron density distribution is located at $r_o$. The density well has a width of $W$. At a distance of $0.5W$ from the minima, the density will reach the critical value causing the electromagnetic rays to reverse their trajectory.
+$$ n_e(r) = \frac{4(n_c-n_o)}{W^2}(r-r_o)^2 + n_o$$
+
+\section*{Initial Conditions}
+The relevant initial conditions for an electromagnetic ray are its initial position and wavevector. The rays will be launched with no $\theta$ component within the wavevector. The initial position will be $(z_i,r_i)$ and the initial wavevector will be $(k_{zi},k_{ri})$. 
+$$x_i = (z_i,r_i)$$
+$$k_i = (k_{zi},k_{ri})$$
+
+\section*{Dispersion Equation and Hamilton's Ray Equation}
+In SI units, the dispersion relation can be expressed as the following:
+$$\omega^2 = \omega_{pe}^2 + c^2k^2$$
+Expanding the plasma frequency results in:
+$$\omega^2 = \alpha n_e(r) + c^2k^2$$
+$$\alpha = \frac{e^2}{m_e \epsilon_0}$$
+The Hamilton's ray equations are described below
+$$V_{g,z} = \frac{dz}{dt} = \bigg(\frac{\partial \omega}{\partial k_z}\bigg)_{x,t}$$
+$$V_{r,z} = \frac{dr}{dt} = \bigg(\frac{\partial \omega}{\partial k_r}\bigg)_{x,t}$$
+$$\frac{dk_z}{dt} = -\bigg(\frac{\partial \omega}{\partial z}\bigg)_{k,t}$$
+$$\frac{dk_r}{dt} = -\bigg(\frac{\partial \omega}{\partial r}\bigg)_{k,t}$$
+Substituting in the dispersion relation for electromagnetic waves in plasma:
+$$V_{g,z} = \frac{dz}{dt} = \frac{c^2k_z}{\omega}$$
+$$V_{r,z} = \frac{dr}{dt} = \frac{c^2k_r}{\omega}$$
+$$\frac{dk_z}{dt} = 0$$
+$$\frac{dk_r}{dt} = -\beta (r-r_o)$$
+$$\beta = \frac{4(n_c-n_o)}{\omega W^2}\alpha = \frac{4(n_c-n_o)e^2}{\omega W^2m_e\epsilon_0}$$
+
+\section*{Solving for trajectory in the z-dimension}
+As there is no change in $k_z$ over time, it retains the value of the initial condition.
+$$k_z(t) = \bigg(\int_0^t{\frac{dk_z}{d\tau} d\tau}\bigg)_{k_z(0)=k_{zi}} = \bigg(\int_0^t{0\, d\tau}\bigg)_{k_z(0)=k_{zi}} = k_{zi} $$
+With an analytical definition of $k_z(t)$, it can be substituted into the expression for $z(t)$
+$$ z(t) = \bigg(\int_0^t{\frac{d\omega}{dk_z} d\tau}\bigg)_{z(0)=z_i} = \bigg(\int_0^t{\frac{c^2k_z(t)}{\omega} d\tau}\bigg)_{z(0)=z_i}$$
+The trajectory in the $z$ dimesion is defined analytically as:
+$$ z(t)= \frac{c^2k_{zi}}{\omega}+z_i$$
+
+\section*{Solving for trajectory in the r-dimension}
+The coupled set of equations is stated below:
+$$\frac{dr}{dt} = \frac{c^2k_r}{\omega}$$
+$$\frac{dk_r}{dt} = -\beta (r-r_o)$$
+Differentiating the expression for $V_{g,r}$ and substitution results in a second order ODE:
+$$\frac{d^2r}{dt^2} = \frac{c^2}{\omega}\frac{dk_r}{dt} = -\frac{c^2 \beta}{\omega}(r-r_o)$$
+The ODE requires finding both the general and specific solution before fitting the complete solution to the initial conditions. 
+$$r(t) = r_s(t) + r_g(t) $$
+\subsection*{General Solution}
+Determining the general solution requires finding the determinant
+$$r_s'' + \frac{c^2 \beta}{\omega}r_s = 0$$
+$$D = B^2 - 4AC = 0 - 4(1)\frac{c^2\beta}{\omega} = -\frac{4c^2\beta}{\omega}$$
+$$D < 0 $$
+As all constants are positive, the determinant is negative. The general solution will be in the form of trigonometric functions with frequency $\gamma$. As $B=0$, the roots of the ODE will have no real component, therefore there will be no exponential factor in the general solution
+$$\gamma^2 = \frac{c^2\beta}{\omega}$$
+$$r_g(t) = A_1\cos{(\gamma t)} + A_2 \sin{(\gamma t)}$$
+
+\subsection*{Specific Solution}
+As the driving function is constant, the specific solution will also be constant 
+$$r_s'' + \frac{c^2 \beta}{\omega}r_s = f(t)$$
+$$f(t) = \frac{c^2 \beta r_o}{\omega}$$
+$$r_s(t) = r_o$$
+
+\subsection*{Fitting to Initial Conditions}
+The general solution and its first derivative is stated below: 
+$$r(t) = A_1\cos{(\gamma t)} + A_2 \sin{(\gamma t)} + r_o$$
+$$r'(t) = -A_1\gamma\sin{(\gamma t)} + A_2 \gamma\cos{(\gamma t)}$$
+At $t=0$, the general solution and its derivative must satisfy the initial conditions.
+$$r(0) = A_1 + r_o = r_i$$
+$$A_1 = r_i - r_o$$
+$$r'(0) = A_2\gamma=\bigg(\frac{dr}{dt}\bigg)_{t=0}=\frac{c^2 k_{ri}}{\omega}$$
+$$A_2 = \frac{c^2 k_{ri}}{\omega\gamma }$$
+\section*{Complete Solution} q
+The complete solution stated below:
+$$z(t) = \frac{c^2 k_{zi}}{\omega} + z_i$$
+$$r(t) = (r_i - r_o)\cos{(\gamma t)} + \frac{c^2 k_{ri}}{\omega\gamma }\sin{(\gamma t)} + r_o$$
+$$\gamma = \sqrt{\frac{c^2\beta}{\omega}}$$
+$$\beta = \frac{4(n_c-n_o)e^2}{\omega W^2m_e\epsilon_0}$$
+\end{document}

@@ -1,0 +1,116 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+\title{Another Approach To Computing Electromagnetic Ray Trajectories Within Plasma Varying In 2 Dimensions}
+\date{}
+\begin{document}
+
+
+\maketitle
+\section*{Approximation of an electron density distribution with 2D linear basis functions}
+Given a distribution of electron density values defined on rectangular nodes, the electron density can be interpolated within a single rectangular cell using 2D linear basis functions. The following expression describes an interpolation based on 2D linear basis functions acting on a rectangular cell of width $\alpha$ and height $\beta$
+\newline
+
+%\begin{tikzpicture}
+
+%\fill[blue!40!white] (0,0) rectangle (5,5);
+%\filldraw[black] (0,0) circle (2pt) node[anchor=west] {n1};
+%\filldraw[black] (0,0) circle (2pt) node[anchor=west] {Intersection point};
+%\filldraw[black] (0,0) circle (2pt) node[anchor=west] {Intersection point};
+%\filldraw[black] (0,0) circle (2pt) node[anchor=west] {Intersection point};
+%\end{tikzpicture}
+\begin{equation}
+n_e = \sum^4_{i=1}{n_{i}\Phi_i(x,y)}
+\end{equation}
+\begin{align}
+\Phi_1(x,y) &= \bigg(1-\frac{x}{\alpha}\bigg)\bigg(1-\frac{y}{\beta}\bigg) \tag{2a}\\
+\Phi_2(x,y) &= \bigg(\frac{x}{\alpha}\bigg)\bigg(1-\frac{y}{\beta}\bigg) \tag{2b}\\
+\Phi_3(x,y) &= \bigg(1-\frac{x}{\alpha}\bigg)\bigg(\frac{y}{\beta}\bigg) \tag{2c}\\
+\Phi_4(x,y) &= \bigg(\frac{x}{\alpha}\bigg)\bigg(\frac{y}{\beta}\bigg) \tag{2d}
+\end{align}
+
+Expanding the basis functions results in the following expression for electron density
+\begin{equation*}
+\operatorname{n_{e}}{\left(x,y \right)} = n_{1} + x y \left(\frac{n_{1}}{\alpha \beta} - \frac{n_{2}}{\alpha \beta} - \frac{n_{3}}{\alpha \beta} + \frac{n_{4}}{\alpha \beta}\right) + x \left(- \frac{n_{1}}{\alpha} + \frac{n_{2}}{\alpha}\right) + y \left(- \frac{n_{1}}{\beta} + \frac{n_{3}}{\beta}\right)
+\end{equation*}
+\section*{Hamilton's Ray Equations for Electromagnetic Rays}
+The following equations are the Hamilton's ray equations for electromagnetic rays within plasma. 
+\begin{equation}
+\frac{dx}{d t}  = \frac{c^{2} \operatorname{k_{x}}}{\omega}
+\tag{3}
+\end{equation}
+\begin{equation}
+\frac{dk_x}{d t} = \frac{e^2 }{m \epsilon_0}\frac{dn_e}{dx}
+\tag{4}
+\end{equation}
+\begin{equation}
+\frac{dy}{d t}  = \frac{c^{2} \operatorname{k_{y}}{}}{\omega}
+\tag{5}
+\end{equation}
+\begin{equation}
+\frac{dk_y}{d t} = \frac{e^2 }{m \epsilon_0}\frac{dn_e}{dy}
+\tag{6}
+\end{equation}
+The trajectory of an electromagnetic ray can be solved with initial values for $x$,$y$,$k_x$,$k_y$, referenced as $x_o$,$y_o$,$k_{x,o}$,$k_{y,o}$. For simplification the following expression is defined
+$$\gamma = \frac{e^2}{m\epsilon_0}$$
+
+\section*{Analytical Solution}
+The following expressions describe the analytical trajectories, making use of several constant coefficients that have values based on the corner density values and the initial coefficients. 
+
+\begin{equation}
+x{\left(t \right)} = - \frac{D_{1}}{D_{2}} + E_{1} e^{- \sqrt[4]{D_{2}} t} + E_{2} e^{\sqrt[4]{D_{2}} t} + E_{3} \sin{\left(\sqrt[4]{D_{2}} t \right)} + E_{4} \cos{\left(\sqrt[4]{D_{2}} t \right)} \tag{7}
+\end{equation}
+\begin{equation}
+y{\left(t \right)} = - \frac{D_{3}}{D_{4}} + F_{1} e^{- \sqrt[4]{D_{4}} t} + F_{2} e^{\sqrt[4]{D_{4}} t} + F_{3} \sin{\left(\sqrt[4]{D_{4}} t \right)} + F_{4} \cos{\left(\sqrt[4]{D_{4}} t \right)}
+\tag{8}
+\end{equation}
+\section*{Application}
+This analytical solution could be used for numerical solutions to EM ray trajectories. The computed rays would consist of segments of analytical solutions chained together, computed by the process below:
+\begin{enumerate}
+\item Compute some constant coefficients based on electron density sampling points at the corner of each rectangular cell.
+\item Define initial conditions for an EM ray
+\item Based on the rectangular cell that the EM ray is in, compute the remainder of the constant coefficients
+\item With the analytical solution complete with coefficients, use root-finding algorithms to determine the time it will take for a ray to hit a cell boundary
+\item Store the coefficients along with the time in cell before collision with boundary
+\item Return to step 3 with new rectangular cell until simulation time is complete
+\end{enumerate}
+This approach may be applicable to other basis functions i.e. triangular meshes or 3D meshes.
+\section*{Constants}
+\subsection*{C coefficients}
+\begin{align*}
+C_{1} &= \frac{c^{2} \gamma \left(- \frac{n_{1}}{\alpha} + \frac{n_{2}}{\alpha}\right)}{2 \omega^{2}}
+\tag{9a} \\
+C_{2} &= \frac{c^{2} \gamma \left(\frac{n_{1}}{\alpha \beta} - \frac{n_{2}}{\alpha \beta} - \frac{n_{3}}{\alpha \beta} + \frac{n_{4}}{\alpha \beta}\right)}{2 \omega^{2}}
+\tag{9b} \\
+C_{3} &= \frac{c^{2} \gamma \left(- \frac{n_{1}}{\beta} + \frac{n_{3}}{\beta}\right)}{2 \omega^{2}}
+\tag{9c} \\
+C_{4} &= \frac{c^{2} \gamma \left(\frac{n_{1}}{\alpha \beta} - \frac{n_{2}}{\alpha \beta} - \frac{n_{3}}{\alpha \beta} + \frac{n_{4}}{\alpha \beta}\right)}{2 \omega^{2}} \tag{9d} \\
+\end{align*}
+\subsection*{D coefficients}
+\begin{align*}
+D_{1} &= \frac{c^{4} \gamma^{2} \left(- \frac{n_{1}}{\beta} + \frac{n_{3}}{\beta}\right) \left(\frac{n_{1}}{\alpha \beta} - \frac{n_{2}}{\alpha \beta} - \frac{n_{3}}{\alpha \beta} + \frac{n_{4}}{\alpha \beta}\right)}{4 \omega^{4}}
+\tag{10a} \\
+D_{2} &= \frac{c^{4} \gamma^{2} \left(\frac{n_{1}}{\alpha \beta} - \frac{n_{2}}{\alpha \beta} - \frac{n_{3}}{\alpha \beta} + \frac{n_{4}}{\alpha \beta}\right)^{2}}{4 \omega^{4}}
+\tag{10b} \\
+D_{3} &= \frac{c^{4} \gamma^{2} \left(- \frac{n_{1}}{\alpha} + \frac{n_{2}}{\alpha}\right) \left(\frac{n_{1}}{\alpha \beta} - \frac{n_{2}}{\alpha \beta} - \frac{n_{3}}{\alpha \beta} + \frac{n_{4}}{\alpha \beta}\right)}{4 \omega^{4}} \tag{10c} \\
+D_{4} &= \frac{c^{4} \gamma^{2} \left(\frac{n_{1}}{\alpha \beta} - \frac{n_{2}}{\alpha \beta} - \frac{n_{3}}{\alpha \beta} + \frac{n_{4}}{\alpha \beta}\right)^{2}}{4 \omega^{4}} \tag{10d} \\
+\end{align*}
+
+\subsection*{E coefficients (x solution)}
+\begin{align*}
+E_{1} &= - \frac{C_{2} c^{2} k_{yo}}{4 D_{2}^{0.75} \omega} + \frac{D_{1}}{4 D_{2}} + \frac{x_{o}}{4} + \frac{C_{1} + C_{2} y_{o}}{4 \sqrt{D_{2}}} - \frac{c^{2} k_{xo}}{4 \sqrt[4]{D_{2}} \omega} \tag{11a}\\
+E_{2} &= \frac{C_{2} c^{2} k_{yo}}{4 D_{2}^{0.75} \omega} + \frac{D_{1}}{4 D_{2}} + \frac{x_{o}}{4} + \frac{C_{1} + C_{2} y_{o}}{4 \sqrt{D_{2}}} + \frac{c^{2} k_{xo}}{4 \sqrt[4]{D_{2}} \omega} \tag{11b}\\
+E_{3} &= - \frac{C_{2} c^{2} k_{yo}}{2 D_{2}^{0.75} \omega} + \frac{c^{2} k_{xo}}{2 \sqrt[4]{D_{2}} \omega}
+\tag{11c}\\
+E_{4} &= \frac{D_{1}}{2 D_{2}} + \frac{x_{o}}{2} - \frac{C_{1} + C_{2} y_{o}}{2 \sqrt{D_{2}}} \tag{11d}\\
+\end{align*}
+\subsection*{F coefficients (y solution)}
+\begin{align*}
+F_{1} &= - \frac{C_{4} c^{2} k_{xo}}{4 D_{4}^{0.75} \omega} + \frac{D_{3}}{4 D_{4}} + \frac{y_{o}}{4} + \frac{C_{3} + C_{4} x_{o}}{4 \sqrt{D_{4}}} - \frac{c^{2} k_{yo}}{4 \sqrt[4]{D_{4}} \omega} \tag{12a} \\
+F_{2} &= \frac{C_{4} c^{2} k_{xo}}{4 D_{4}^{0.75} \omega} + \frac{D_{3}}{4 D_{4}} + \frac{y_{o}}{4} + \frac{C_{3} + C_{4} x_{o}}{4 \sqrt{D_{4}}} + \frac{c^{2} k_{yo}}{4 \sqrt[4]{D_{4}} \omega} \tag{12b} \\
+F_{3} &= - \frac{C_{4} c^{2} k_{xo}}{2 D_{4}^{0.75} \omega} + \frac{c^{2} k_{yo}}{2 \sqrt[4]{D_{4}} \omega}
+\tag{12c} \\
+F_{4} &= \frac{D_{3}}{2 D_{4}} + \frac{y_{o}}{2} - \frac{C_{3} + C_{4} x_{o}}{2 \sqrt{D_{4}}} 
+\tag{12d} \\
+\end{align*}
+\end{document}
